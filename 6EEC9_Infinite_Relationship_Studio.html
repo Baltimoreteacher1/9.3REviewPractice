@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="6.EE.C.9 Infinite Relationship Studio — unlimited partner practice for dependent and independent variables." />
+  <title>6.EE.C.9 · Infinite Relationship Studio</title>
+  <style>
+    /* ─── Design tokens ──────────────────────────────────────────────── */
+    :root {
+      --bg:        #edf5ff;
+      --bg2:       #f9fbff;
+      --panel:     #ffffff;
+      --panel2:    #f6faff;
+      --line:      #d8e6f8;
+      --text:      #18324d;
+      --muted:     #5f7690;
+      --blue:      #2f6fed;
+      --blue2:     #76a8ff;
+      --green:     #1fa971;
+      --green2:    #4ed09a;
+      --gold:      #ffcb5c;
+      --orange:    #ffad5a;
+      --red:       #e25d5d;
+      --violet:    #8f7cff;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --shadow:    0 20px 48px rgba(41,93,160,.12);
+      --shadow-sm: 0 10px 24px rgba(41,93,160,.10);
+      --transition: .18s ease;
+      --focus-ring: 0 0 0 3px rgba(47,111,237,.30);
+    }
+
+    /* ─── Reset ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #fff 0%, rgba(255,255,255,0) 34%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      min-height: 100vh;
+    }
+
+    /* ─── Skip link for a11y ─────────────────────────────────────────── */
+    .skip-link {
+      position: absolute;
+      top: -9999px; left: 0;
+      background: var(--blue); color: #fff;
+      padding: 8px 16px; border-radius: 0 0 8px 0;
+      font-weight: 900; z-index: 9999;
+      transition: top .15s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ─── Layout ─────────────────────────────────────────────────────── */
+    .app { max-width: 1120px; margin: 0 auto; padding: 18px; }
+
+    /* ─── Hero ───────────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f6fbff 100%);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 18px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 260px; height: 260px;
+      right: -80px; top: -80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(47,111,237,.15), rgba(47,111,237,0));
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--blue);
+      background: #edf4ff;
+      border: 1px solid #cddfff;
+    }
+
+    h1 {
+      margin: 12px 0 6px;
+      font-size: clamp(24px, 4vw, 40px);
+      line-height: 1.06;
+      letter-spacing: -.022em;
+      max-width: 820px;
+    }
+
+    .sub {
+      color: var(--muted);
+      max-width: 820px;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    /* ─── Topbar (progress + stats) ──────────────────────────────────── */
+    .topbar {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .track {
+      height: 13px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e8f0fb;
+      border: 1px solid #d7e4f8;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--green), var(--gold));
+      transition: width .35s ease;
+      border-radius: 999px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .stat {
+      background: #f6faff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--blue);
+      margin-bottom: 4px;
+      transition: transform .15s ease;
+    }
+
+    .stat-num.bump {
+      transform: scale(1.25);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    /* ─── Stage layout ───────────────────────────────────────────────── */
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .side { position: sticky; top: 16px; }
+
+    /* ─── Mission header ─────────────────────────────────────────────── */
+    .mission-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #eff5ff;
+      border: 1px solid #d7e5fb;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+    }
+
+    .mission-title {
+      margin: 10px 0 4px;
+      font-size: clamp(22px, 3.2vw, 32px);
+      letter-spacing: -.022em;
+      line-height: 1.06;
+    }
+
+    .mission-desc {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    /* ─── Problem box ────────────────────────────────────────────────── */
+    .problem-box {
+      margin-top: 16px;
+      background: linear-gradient(180deg, #fbfdff 0%, #f4f8ff 100%);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+    }
+
+    .problem-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .problem-label {
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .09em;
+    }
+
+    .difficulty {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #fff7e6;
+      border: 1px solid #f1dbaf;
+      color: #9a6a00;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .scenario {
+      font-size: 17px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .micro {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* ─── Work area ──────────────────────────────────────────────────── */
+    .work-area {
+      margin-top: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .task {
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 14px;
+    }
+
+    .task-title {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    /* ─── Multiple-choice buttons ────────────────────────────────────── */
+    .choices { display: grid; gap: 9px; }
+
+    .choice {
+      width: 100%;
+      text-align: left;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .choice:hover  { transform: translateY(-1px); border-color: #a8c8ff; }
+    .choice:focus  { outline: none; box-shadow: var(--focus-ring); }
+    .choice.selected {
+      border-color: #5b9bff;
+      background: #e8f2ff;
+      color: var(--blue);
+    }
+    .choice[aria-pressed="true"] {
+      border-color: #5b9bff;
+      background: #e8f2ff;
+      color: var(--blue);
+    }
+
+    /* ─── Equation builder ───────────────────────────────────────────── */
+    .equation-builder { display: grid; gap: 10px; }
+
+    .drop-zone {
+      min-height: 64px;
+      border-radius: 16px;
+      border: 2px dashed #b9d3f0;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 10px 12px;
+      transition: border-color var(--transition);
+    }
+    .drop-zone.active { border-color: var(--blue); background: #f2f8ff; }
+
+    .ghost { color: #8da2ba; font-weight: 700; font-size: 14px; }
+
+    .tokens { display: flex; gap: 9px; flex-wrap: wrap; }
+
+    .token {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #17324d;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .token:hover  { transform: translateY(-1px); }
+    .token:focus  { outline: none; box-shadow: var(--focus-ring); }
+    .token.blue   { background: linear-gradient(135deg,#cfe1ff,#8eb7ff); }
+    .token.green  { background: linear-gradient(135deg,#c6f1dc,#83d7ae); }
+    .token.gold   { background: linear-gradient(135deg,#ffe8a9,#ffd064); }
+    .token.orange { background: linear-gradient(135deg,#ffd8ae,#ffb56f); }
+    .token.violet { background: linear-gradient(135deg,#dbd5ff,#b5abff); }
+
+    .zone-token {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #e8f2ff;
+      border: 1px solid #cfe0fb;
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .zone-token-remove {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #50739b;
+      font-weight: 900;
+      font-size: 16px;
+      line-height: 1;
+      padding: 0 2px;
+      display: flex;
+      align-items: center;
+      border-radius: 50%;
+      transition: background var(--transition);
+    }
+    .zone-token-remove:hover  { background: rgba(0,0,0,.07); }
+    .zone-token-remove:focus  { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ─── Form inputs ────────────────────────────────────────────────── */
+    textarea, input[type="text"] {
+      width: 100%;
+      border: 1.5px solid #cfe0f6;
+      border-radius: var(--radius-sm);
+      background: #fff;
+      padding: 12px 14px;
+      font: inherit;
+      font-size: 14px;
+      color: var(--text);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    textarea {
+      min-height: 108px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: #7caeff;
+      box-shadow: var(--focus-ring);
+    }
+
+    /* ─── Table ──────────────────────────────────────────────────────── */
+    .table-wrap {
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+    th { background: #f0f6ff; font-weight: 900; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ─── Feedback banner ────────────────────────────────────────────── */
+    .feedback {
+      display: none;
+      margin-top: 14px;
+      border-radius: 16px;
+      padding: 13px 15px;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.5;
+      animation: fadeUp .2s ease;
+    }
+    .feedback.show { display: block; }
+    .feedback.good { background: #edf9f2; border: 1px solid #bfe3ce; color: #116544; }
+    .feedback.warn { background: #fff4f4; border: 1px solid #efc4c4; color: #8b4040; }
+
+    /* ─── Action buttons ─────────────────────────────────────────────── */
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 20px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:focus { outline: none; box-shadow: var(--focus-ring); }
+    .btn:disabled { opacity: .44; cursor: not-allowed; transform: none; }
+    .btn:active  { transform: translateY(0); }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(47,111,237,.24);
+    }
+    .btn.secondary {
+      background: #fff;
+      border: 1.5px solid var(--line);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn.success {
+      background: linear-gradient(135deg, var(--green), var(--green2));
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(31,169,113,.24);
+    }
+    .btn.ghost {
+      background: #eef5ff;
+      border: 1.5px solid #d6e5fb;
+      color: var(--blue);
+    }
+
+    /* ─── Discussion panel ───────────────────────────────────────────── */
+    .talk-panel {
+      display: none;
+      margin-top: 18px;
+      background: linear-gradient(135deg, #edfcf4 0%, #fafffc 100%);
+      border: 1px solid #c4e9d4;
+      border-radius: 20px;
+      padding: 16px;
+      animation: fadeUp .22s ease;
+    }
+    .talk-panel.show { display: block; }
+
+    .talk-title {
+      font-size: 12px;
+      font-weight: 900;
+      color: #15714a;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      margin-bottom: 10px;
+    }
+
+    .talk-q {
+      background: #fff;
+      border: 1px solid #d9edde;
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 9px;
+    }
+
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: #fff;
+      border: 1px solid #d9edde;
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .check:hover { border-color: #a8d9b8; }
+
+    .check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--green);
+      flex: 0 0 auto;
+      cursor: pointer;
+    }
+
+    .check label {
+      font-size: 14px;
+      line-height: 1.45;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ─── Side panel ─────────────────────────────────────────────────── */
+    .side-stack { display: grid; gap: 12px; }
+
+    .mini-title {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--muted);
+      margin-bottom: 9px;
+    }
+
+    .step-list { display: grid; gap: 9px; }
+
+    .step-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 11px 12px;
+      border-radius: 16px;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+    }
+
+    .bubble {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 900;
+      background: #e6efff;
+      color: var(--blue);
+      flex: 0 0 auto;
+    }
+
+    .step-main { font-size: 13px; line-height: 1.45; font-weight: 800; }
+    .step-sub  { color: var(--muted); font-size: 12px; line-height: 1.4; margin-top: 2px; font-weight: 600; }
+
+    .engine-status {
+      margin-top: 10px;
+      padding: 11px 13px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    /* ─── Animations ─────────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────────── */
+    @media (max-width: 980px) {
+      .stage { grid-template-columns: 1fr; }
+      .side  { position: static; }
+      .topbar { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .app, .hero, .card { padding: 14px; }
+      .actions { display: grid; }
+      .btn { width: 100%; justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .problem-head { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#mainCard">Skip to main content</a>
+
+  <div class="app">
+    <!-- ═══ HERO ════════════════════════════════════════════════════════ -->
+    <header class="hero" role="banner">
+      <div class="eyebrow" aria-label="Standard">6.EE.C.9 · Infinite Interactive Partner Practice</div>
+      <h1>Solve it. Discuss it. Move on. Forever.</h1>
+      <p class="sub">
+        Unlimited questions, rotating activity types, automatic difficulty progression, and a
+        locked solve → discuss → continue flow.
+      </p>
+
+      <div class="topbar" aria-label="Progress and statistics">
+        <div class="panel" role="region" aria-label="Progress">
+          <div class="progress-row">
+            <span id="progressText" aria-live="polite" aria-atomic="true">Question 1</span>
+            <span id="masteryText"  aria-live="polite" aria-atomic="true">Accuracy 0%</span>
+          </div>
+          <div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+               aria-valuenow="0" aria-label="Difficulty progress" id="progressBar">
+            <div class="fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="stats" role="list" aria-label="Score statistics">
+            <div class="stat" role="listitem">
+              <div class="stat-num" id="solvedCount" aria-label="Questions solved">0</div>
+              <div class="stat-label">Solved</div>
+            </div>
+            <div class="stat" role="listitem">
+              <div class="stat-num" id="talkCount" aria-label="Questions discussed">0</div>
+              <div class="stat-label">Discussed</div>
+            </div>
+            <div class="stat" role="listitem">
+              <div class="stat-num" id="starCount" aria-label="Stars earned">0</div>
+              <div class="stat-label">Stars</div>
+            </div>
+            <div class="stat" role="listitem">
+              <div class="stat-num" id="streakCount" aria-label="Current streak">0</div>
+              <div class="stat-label">Streak</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header><!-- /hero -->
+
+    <!-- ═══ STAGE ═══════════════════════════════════════════════════════ -->
+    <div class="stage">
+      <!-- Main question card -->
+      <section id="mainCard" class="card" aria-label="Question">
+        <div class="mission-kicker" id="missionKicker">Question 1</div>
+        <h2 class="mission-title" id="missionTitle">Loading…</h2>
+        <p class="mission-desc" id="missionDesc"></p>
+
+        <div class="problem-box">
+          <div class="problem-head">
+            <span class="problem-label" id="typeLabel">Type</span>
+            <span class="difficulty" id="difficultyLabel" aria-label="Difficulty level">Level 1</span>
+          </div>
+          <p class="scenario" id="scenarioText"></p>
+          <p class="micro"    id="microText"></p>
+        </div>
+
+        <div class="work-area" id="workArea" aria-live="polite" aria-atomic="false"></div>
+
+        <div class="feedback" id="feedbackBox" role="alert" aria-live="assertive"></div>
+
+        <div class="actions" role="group" aria-label="Question actions">
+          <button class="btn primary" id="checkBtn" type="button">Check Answer</button>
+          <button class="btn secondary" id="resetBtn" type="button">Reset Question</button>
+        </div>
+
+        <!-- Discussion panel – revealed only after correct answer -->
+        <div class="talk-panel" id="talkPanel" role="region" aria-label="Partner discussion" aria-hidden="true">
+          <div class="talk-title">Partner Discussion</div>
+          <div class="talk-q" id="talkQ1"></div>
+          <div class="talk-q" id="talkQ2"></div>
+
+          <label class="check" for="talkCheck1">
+            <input type="checkbox" id="talkCheck1" />
+            <span>We explained how the equation, table, or pattern matched the situation.</span>
+          </label>
+          <label class="check" for="talkCheck2">
+            <input type="checkbox" id="talkCheck2" />
+            <span>We identified which variable depends on the other and explained why.</span>
+          </label>
+
+          <div class="actions" style="margin-top:14px">
+            <button class="btn success" id="nextBtn" type="button" disabled>Next Question →</button>
+          </div>
+        </div>
+      </section><!-- /main card -->
+
+      <!-- Sidebar -->
+      <aside class="side" aria-label="Question guide">
+        <div class="side-stack">
+
+          <div class="panel">
+            <div class="mini-title">Question Flow</div>
+            <div class="step-list" role="list">
+              <div class="step-item" role="listitem">
+                <div class="bubble" aria-hidden="true">1</div>
+                <div>
+                  <div class="step-main">Solve the math task.</div>
+                  <div class="step-sub">Activity type changes automatically.</div>
+                </div>
+              </div>
+              <div class="step-item" role="listitem">
+                <div class="bubble" aria-hidden="true">2</div>
+                <div>
+                  <div class="step-main">Unlock discussion.</div>
+                  <div class="step-sub">Partner discussion appears only after a correct answer.</div>
+                </div>
+              </div>
+              <div class="step-item" role="listitem">
+                <div class="bubble" aria-hidden="true">3</div>
+                <div>
+                  <div class="step-main">Check both discussion boxes.</div>
+                  <div class="step-sub">Then continue to the next question.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="mini-title">Difficulty Engine</div>
+            <div class="step-list" role="list">
+              <div class="step-item" role="listitem">
+                <div class="bubble" aria-hidden="true">A</div>
+                <div>
+                  <div class="step-main">Early</div>
+                  <div class="step-sub">Simple proportional relationships.</div>
+                </div>
+              </div>
+              <div class="step-item" role="listitem">
+                <div class="bubble" aria-hidden="true">B</div>
+                <div>
+                  <div class="step-main">Middle</div>
+                  <div class="step-sub">Tables, variable roles, and starting values.</div>
+                </div>
+              </div>
+              <div class="step-item" role="listitem">
+                <div class="bubble" aria-hidden="true">C</div>
+                <div>
+                  <div class="step-main">Later</div>
+                  <div class="step-sub">Harder numbers, distractors, graph matching, and written justification.</div>
+                </div>
+              </div>
+            </div>
+            <div class="engine-status" id="engineStatus" aria-live="polite" aria-atomic="true">Engine ready.</div>
+          </div>
+
+        </div>
+      </aside><!-- /aside -->
+    </div><!-- /stage -->
+  </div><!-- /app -->
+
+  <script>
+    'use strict';
+
+    /* ─────────────────────────────────────────────────────────────────
+       CONSTANTS
+    ───────────────────────────────────────────────────────────────── */
+    const QUESTION_TYPES = Object.freeze([
+      'mc_variable',
+      'equation_builder',
+      'table_fill',
+      'variable_sort',
+      'equation_with_start',
+      'table_fill_hard',
+      'graph_match',
+      'justify_write'
+    ]);
+
+    const SCENARIOS = Object.freeze([
+      { name:'Sticker Packs',     item:'sticker pack', items:'sticker packs', xVar:'p', yVar:'c', xLabel:'number of packs',    yLabel:'total cost',          unit:'dollars',     startAllowed:true  },
+      { name:'Arcade Credits',    item:'dollar loaded', items:'dollars loaded', xVar:'d', yVar:'r', xLabel:'dollars added',   yLabel:'credits earned',      unit:'credits',     startAllowed:false },
+      { name:'Game Tickets',      item:'game won',    items:'games won',     xVar:'g', yVar:'t', xLabel:'games won',          yLabel:'tickets earned',      unit:'tickets',    startAllowed:false },
+      { name:'Bike Rental',       item:'hour',        items:'hours',         xVar:'h', yVar:'c', xLabel:'hours rented',       yLabel:'total cost',          unit:'dollars',     startAllowed:true  },
+      { name:'Streaming Plan',    item:'month',       items:'months',        xVar:'m', yVar:'t', xLabel:'months',             yLabel:'total cost',          unit:'dollars',     startAllowed:true  },
+      { name:'Snack Boxes',       item:'box',         items:'boxes',         xVar:'b', yVar:'c', xLabel:'boxes bought',        yLabel:'total cost',          unit:'dollars',     startAllowed:false },
+      { name:'School Fair Rides', item:'ride',        items:'rides',         xVar:'r', yVar:'t', xLabel:'rides taken',         yLabel:'tickets used',        unit:'tickets',    startAllowed:false },
+      { name:'Music Downloads',   item:'song',        items:'songs',         xVar:'s', yVar:'c', xLabel:'songs downloaded',    yLabel:'total cost',          unit:'dollars',     startAllowed:true  },
+      { name:'Robot Parts',       item:'part',        items:'parts',         xVar:'p', yVar:'m', xLabel:'parts made',          yLabel:'metal pieces used',   unit:'pieces',     startAllowed:false },
+      { name:'Glow Sticks',       item:'pack',        items:'packs',         xVar:'p', yVar:'g', xLabel:'packs bought',        yLabel:'glow sticks',         unit:'glow sticks', startAllowed:false }
+    ]);
+
+    const RATE_RANGES = Object.freeze({
+      dollars: [[2,6],[4,9],[5,12],[6,15],[8,18]],
+      default: [[3,9],[5,12],[7,15],[8,18],[10,24]]
+    });
+
+    const TYPE_DESCRIPTIONS = Object.freeze({
+      mc_variable:          'Choose the dependent variable and explain why.',
+      equation_builder:     'Build the equation from tiles.',
+      table_fill:           'Use the pattern in the table.',
+      variable_sort:        'Identify dependent and independent variables.',
+      equation_with_start:  'Write a relationship that includes a starting value.',
+      table_fill_hard:      'Use a harder table pattern.',
+      graph_match:          'Choose the rule that matches the graph description.',
+      justify_write:        'Write and justify the equation in full.'
+    });
+
+    const TOKEN_COLORS = Object.freeze(['blue','green','gold','orange','violet']);
+
+    /* ─────────────────────────────────────────────────────────────────
+       STATE
+    ───────────────────────────────────────────────────────────────── */
+    const state = {
+      currentIndex:  0,
+      current:       null,
+      solved:        0,
+      discussed:     0,
+      stars:         0,
+      streak:        0,
+      attempts:      0,
+      correctChecks: 0
+    };
+
+    /* ─────────────────────────────────────────────────────────────────
+       DOM ELEMENT CACHE  (queried once at init)
+    ───────────────────────────────────────────────────────────────── */
+    const els = {};
+
+    function cacheEls() {
+      const ids = [
+        'missionKicker','missionTitle','missionDesc','typeLabel','difficultyLabel',
+        'scenarioText','microText','workArea','feedbackBox',
+        'checkBtn','resetBtn',
+        'talkPanel','talkQ1','talkQ2','talkCheck1','talkCheck2','nextBtn',
+        'progressText','masteryText','progressFill','progressBar',
+        'solvedCount','talkCount','starCount','streakCount',
+        'engineStatus'
+      ];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) throw new Error(`DOM element #${id} not found.`);
+        els[id] = el;
+      });
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       UTILITIES
+    ───────────────────────────────────────────────────────────────── */
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function pickRandom(arr) {
+      return arr[randInt(0, arr.length - 1)];
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    /**
+     * Normalises an equation string for comparison:
+     * lowercase, strip spaces, convert × → *, strip $.
+     */
+    function normaliseEq(s) {
+      return String(s)
+        .toLowerCase()
+        .replace(/\s+/g, '')
+        .replace(/×/g, '*')
+        .replace(/\$/g, '');
+    }
+
+    /**
+     * Removes * for human-readable display.
+     */
+    function prettyEq(eq) {
+      return String(eq).replace(/\*/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    /**
+     * Returns true if text contains at least one match from every group.
+     * Each group is an array of alternatives (OR), groups are ANDed.
+     */
+    function containsAll(text, groups) {
+      const t = String(text).toLowerCase();
+      return groups.every(group =>
+        group.some(word => t.includes(String(word).toLowerCase()))
+      );
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       DIFFICULTY ENGINE
+    ───────────────────────────────────────────────────────────────── */
+    function difficultyBand(index) {
+      if (index <  4) return 1;
+      if (index <  8) return 2;
+      if (index < 14) return 3;
+      if (index < 22) return 4;
+      return 5;
+    }
+
+    function getRateRange(band, unit) {
+      const table = (unit === 'dollars') ? RATE_RANGES.dollars : RATE_RANGES.default;
+      return table[band - 1];
+    }
+
+    function getStartOptions(scenario, band) {
+      if (!scenario.startAllowed) return [0];
+      const sets = [[0,2,4],[0,3,5,6],[0,4,6,8],[0,5,7,9,12],[0,6,8,10,12,15]];
+      return sets[band - 1];
+    }
+
+    function chooseType(index, band) {
+      const pools = {
+        1: ['mc_variable','equation_builder','table_fill'],
+        2: ['equation_builder','table_fill','variable_sort','equation_with_start'],
+        3: ['table_fill','variable_sort','equation_with_start','table_fill_hard','graph_match'],
+        4: ['equation_with_start','table_fill_hard','graph_match','justify_write','variable_sort'],
+        5: ['table_fill_hard','graph_match','justify_write','equation_with_start','variable_sort']
+      };
+      const pool = pools[band] || pools[5];
+      return pool[index % pool.length];
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       QUESTION FACTORY
+    ───────────────────────────────────────────────────────────────── */
+    function buildEquationString(xVar, yVar, rate, start) {
+      return start === 0 ? `${yVar}=${rate}${xVar}` : `${yVar}=${rate}${xVar}+${start}`;
+    }
+
+    function buildScenarioSentence(scenario, rate, start) {
+      const { xVar, yVar, xLabel, yLabel, name, item, unit } = scenario;
+      if (start === 0) {
+        return unit === 'dollars'
+          ? `At ${name}, each ${item} costs $${rate}. Let ${xVar} be the ${xLabel} and ${yVar} be the ${yLabel}.`
+          : `At ${name}, each ${item} gives ${rate} ${unit}. Let ${xVar} be the ${xLabel} and ${yVar} be the ${yLabel}.`;
+      }
+      return unit === 'dollars'
+        ? `At ${name}, there is a starting fee of $${start} plus $${rate} for each ${item}. Let ${xVar} be the ${xLabel} and ${yVar} be the ${yLabel}.`
+        : `At ${name}, you start with ${start} ${unit} and gain ${rate} more for each ${item}. Let ${xVar} be the ${xLabel} and ${yVar} be the ${yLabel}.`;
+    }
+
+    function makeQuestion(index) {
+      const band     = difficultyBand(index);
+      const scenario = SCENARIOS[index % SCENARIOS.length];
+      const type     = chooseType(index, band);
+      const [rMin, rMax] = getRateRange(band, scenario.unit);
+      const rate     = randInt(rMin, rMax);
+
+      let start = pickRandom(getStartOptions(scenario, band));
+
+      // Force start = 0 on simple types in early bands
+      if (band === 1 && ['mc_variable','equation_builder','table_fill','variable_sort'].includes(type)) {
+        start = 0;
+      }
+      if (!scenario.startAllowed) start = 0;
+      if (type === 'equation_with_start' && start === 0) start = randInt(2 + band, 4 + band * 2);
+      if (type === 'table_fill_hard'    && start === 0) start = randInt(2, 8);
+
+      return {
+        id: index + 1,
+        band,
+        type,
+        scenario,
+        rate,
+        start,
+        equation: buildEquationString(scenario.xVar, scenario.yVar, rate, start),
+        solved:    false,
+        discussed: false,
+        ui: {}
+      };
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       HUD / STAT HELPERS
+    ───────────────────────────────────────────────────────────────── */
+    function bumpStat(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('bump');
+      // Force reflow then re-add
+      void el.offsetWidth;
+      el.classList.add('bump');
+      el.addEventListener('transitionend', () => el.classList.remove('bump'), { once: true });
+    }
+
+    function updateHud() {
+      const accuracy = state.attempts === 0
+        ? 0
+        : Math.round((state.correctChecks / state.attempts) * 100);
+
+      const band = difficultyBand(state.currentIndex);
+
+      els.progressText.textContent = `Question ${state.currentIndex + 1}`;
+      els.masteryText.textContent  = `Accuracy ${accuracy}%`;
+
+      const pct = Math.min(100, 12 + band * 17);
+      els.progressFill.style.width = `${pct}%`;
+      els.progressBar.setAttribute('aria-valuenow', pct);
+
+      els.solvedCount.textContent  = state.solved;
+      els.talkCount.textContent    = state.discussed;
+      els.starCount.textContent    = state.stars;
+      els.streakCount.textContent  = state.streak;
+
+      const typeDesc = TYPE_DESCRIPTIONS[state.current?.type] ?? 'Solve the relationship.';
+      els.engineStatus.textContent = `Band ${band} difficulty · ${typeDesc}`;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       FEEDBACK
+    ───────────────────────────────────────────────────────────────── */
+    function showFeedback(kind, msg) {
+      els.feedbackBox.className    = `feedback show ${kind}`;
+      els.feedbackBox.textContent  = msg;
+    }
+
+    function hideFeedback() {
+      els.feedbackBox.className   = 'feedback';
+      els.feedbackBox.textContent = '';
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       DISCUSSION PANEL
+    ───────────────────────────────────────────────────────────────── */
+    function resetTalkPanel() {
+      els.talkPanel.classList.remove('show');
+      els.talkPanel.setAttribute('aria-hidden', 'true');
+      els.talkCheck1.checked = false;
+      els.talkCheck2.checked = false;
+      els.nextBtn.disabled   = true;
+    }
+
+    function unlockDiscussion(q) {
+      const eqText = prettyEq(q.equation);
+      els.talkQ1.textContent = `Explain how ${eqText} matches the situation. What does each number and variable represent?`;
+      els.talkQ2.textContent = `Which quantity depends on the other — ${q.scenario.xLabel} or ${q.scenario.yLabel}? Explain using context from the problem.`;
+      els.talkPanel.classList.add('show');
+      els.talkPanel.setAttribute('aria-hidden', 'false');
+      els.checkBtn.disabled = true;
+    }
+
+    function enableNextIfReady() {
+      const ready = state.current.solved && els.talkCheck1.checked && els.talkCheck2.checked;
+      els.nextBtn.disabled = !ready;
+      if (ready && !state.current.discussed) {
+        state.current.discussed = true;
+        state.discussed += 1;
+        state.stars     += 2;
+        bumpStat('talkCount');
+        bumpStat('starCount');
+        updateHud();
+      }
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       TASK CARD BUILDER
+    ───────────────────────────────────────────────────────────────── */
+    function buildTaskCard(title, innerHTML) {
+      const wrap = document.createElement('div');
+      wrap.className   = 'task';
+      wrap.innerHTML   = `<div class="task-title">${title}</div>${innerHTML}`;
+      return wrap;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       RENDER HELPERS — each type
+    ───────────────────────────────────────────────────────────────── */
+    function renderChoiceGroup(wrapId, choices, onSelect) {
+      const wrap = document.getElementById(wrapId);
+      choices.forEach(text => {
+        const btn = document.createElement('button');
+        btn.type        = 'button';
+        btn.className   = 'choice';
+        btn.textContent = text;
+        btn.addEventListener('click', () => {
+          wrap.querySelectorAll('.choice').forEach(c => {
+            c.classList.remove('selected');
+            c.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('selected');
+          btn.setAttribute('aria-pressed', 'true');
+          onSelect(text);
+        });
+        wrap.appendChild(btn);
+      });
+    }
+
+    function renderMCVariable(q) {
+      const choices = shuffle([q.scenario.yLabel, q.scenario.xLabel, 'both change first', 'neither depends on the other']);
+      const task1   = buildTaskCard('Choose the dependent variable', `<div class="choices" id="choiceWrap"></div>`);
+      els.workArea.appendChild(task1);
+      q.ui.selected = null;
+      renderChoiceGroup('choiceWrap', choices, v => { q.ui.selected = v; });
+
+      const task2 = buildTaskCard('Explain your reasoning',
+        `<textarea id="reasonBox" placeholder="Explain why one quantity depends on the other."></textarea>`);
+      els.workArea.appendChild(task2);
+      q.ui.reason = task2.querySelector('#reasonBox');
+    }
+
+    function buildEquationZone(q, task) {
+      const x = q.scenario.xVar;
+      const y = q.scenario.yVar;
+      const includeStart = q.start !== 0;
+      const tokenValues  = includeStart
+        ? shuffle([y, '=', String(q.rate), x, '+', String(q.start)])
+        : shuffle([y, '=', String(q.rate), x]);
+
+      const dropZone = task.querySelector('#dropZone');
+      const bank     = task.querySelector('#tokenBank');
+      q.ui.eqTokens  = [];
+
+      function refreshZone() {
+        dropZone.innerHTML = '';
+        if (q.ui.eqTokens.length === 0) {
+          dropZone.innerHTML = `<span class="ghost" aria-hidden="true">Tap tiles to build the equation.</span>`;
+          return;
+        }
+        q.ui.eqTokens.forEach((tok, i) => {
+          const span   = document.createElement('span');
+          span.className = 'zone-token';
+
+          const text = document.createTextNode(tok);
+          const btn  = document.createElement('button');
+          btn.type      = 'button';
+          btn.className = 'zone-token-remove';
+          btn.setAttribute('aria-label', `Remove ${tok}`);
+          btn.textContent = '×';
+          btn.addEventListener('click', () => {
+            q.ui.eqTokens.splice(i, 1);
+            refreshZone();
+          });
+
+          span.appendChild(text);
+          span.appendChild(btn);
+          dropZone.appendChild(span);
+        });
+      }
+
+      tokenValues.forEach((tok, i) => {
+        const btn     = document.createElement('button');
+        btn.type      = 'button';
+        btn.className = `token ${TOKEN_COLORS[i % TOKEN_COLORS.length]}`;
+        btn.textContent = tok;
+        btn.addEventListener('click', () => {
+          q.ui.eqTokens.push(tok);
+          refreshZone();
+        });
+        bank.appendChild(btn);
+      });
+
+      refreshZone();
+    }
+
+    function renderEquationBuilder(q) {
+      const task1 = buildTaskCard('Build the equation', `
+        <div class="equation-builder">
+          <div class="drop-zone" id="dropZone" aria-label="Equation drop zone" role="region"></div>
+          <div class="tokens" id="tokenBank" role="group" aria-label="Token bank"></div>
+        </div>
+      `);
+      els.workArea.appendChild(task1);
+      buildEquationZone(q, task1);
+
+      const task2 = buildTaskCard('Explain the relationship',
+        `<textarea id="reasonBox" placeholder="Explain what the number and variable mean."></textarea>`);
+      els.workArea.appendChild(task2);
+      q.ui.reason = task2.querySelector('#reasonBox');
+    }
+
+    function renderTableFill(q, hardMode) {
+      const xStart  = hardMode ? randInt(2, 5) : 1;
+      const xVals   = [xStart, xStart + 1, xStart + 2, xStart + 3];
+      const yVals   = xVals.map(v => q.rate * v + q.start);
+      const misIdx  = hardMode ? randInt(1, 2) : randInt(2, 3);
+
+      const rows = xVals.map((v, i) => `
+        <tr>
+          <td>${v}</td>
+          <td>${i === misIdx
+            ? `<input id="missVal" type="text" inputmode="numeric" aria-label="Missing value" placeholder="?" style="max-width:88px;text-align:center;margin:auto">`
+            : yVals[i]}</td>
+        </tr>`).join('');
+
+      const task1 = buildTaskCard('Find the missing value', `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">${q.scenario.xLabel}</th>
+                <th scope="col">${q.scenario.yLabel}</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `);
+      els.workArea.appendChild(task1);
+      q.ui.missingInput  = task1.querySelector('#missVal');
+      q.ui.missingAnswer = String(yVals[misIdx]);
+
+      const task2 = buildTaskCard('Describe the rule',
+        `<textarea id="ruleBox" placeholder="Describe the rule in words."></textarea>`);
+      els.workArea.appendChild(task2);
+      q.ui.rule = task2.querySelector('#ruleBox');
+    }
+
+    function renderVariableSort(q) {
+      const depChoices = shuffle([q.scenario.yLabel, q.scenario.xLabel, 'the one named first', 'the smaller number']);
+      const indChoices = shuffle([q.scenario.xLabel, q.scenario.yLabel, 'they switch every time', 'both are dependent']);
+
+      const task1 = buildTaskCard('Choose the dependent variable',   `<div class="choices" id="depWrap"></div>`);
+      const task2 = buildTaskCard('Choose the independent variable',  `<div class="choices" id="indWrap"></div>`);
+      const task3 = buildTaskCard('Explain how you know',
+        `<textarea id="reasonBox" placeholder="Use words like depends on, changes when, or determined by."></textarea>`);
+
+      [task1, task2, task3].forEach(t => els.workArea.appendChild(t));
+      q.ui.depSelected = null;
+      q.ui.indSelected = null;
+      q.ui.reason      = task3.querySelector('#reasonBox');
+
+      renderChoiceGroup('depWrap', depChoices, v => { q.ui.depSelected = v; });
+      renderChoiceGroup('indWrap', indChoices, v => { q.ui.indSelected = v; });
+    }
+
+    function renderEquationWithStart(q) {
+      renderEquationBuilder(q);
+      const task3 = buildTaskCard('Explain the starting value',
+        `<input id="startMeaning" type="text" placeholder="What does the starting value mean in the situation?" />`);
+      els.workArea.appendChild(task3);
+      q.ui.startMeaning = task3.querySelector('#startMeaning');
+    }
+
+    function renderGraphMatch(q) {
+      const rateOffset = randInt(1, 3);
+      const wrong1 = q.start === 0
+        ? buildEquationString(q.scenario.xVar, q.scenario.yVar, q.rate + rateOffset, 0)
+        : buildEquationString(q.scenario.xVar, q.scenario.yVar, q.rate, 0);
+      const wrong2 = q.start === 0
+        ? buildEquationString(q.scenario.xVar, q.scenario.yVar, q.rate, randInt(2, 6))
+        : buildEquationString(q.scenario.xVar, q.scenario.yVar, q.rate + randInt(1, 2), q.start);
+
+      const options = shuffle([q.equation, wrong1, wrong2]);
+
+      const task1 = buildTaskCard('Choose the matching rule', `
+        <div class="choices" id="graphChoices">
+          ${options.map((eq, i) => `
+            <button type="button" class="choice graph-choice" data-eq="${eq}">
+              Option ${String.fromCharCode(65 + i)} · ${prettyEq(eq)}
+            </button>`).join('')}
+        </div>
+      `);
+      els.workArea.appendChild(task1);
+      q.ui.selectedGraphEq = null;
+
+      task1.querySelectorAll('.graph-choice').forEach(btn => {
+        btn.addEventListener('click', () => {
+          task1.querySelectorAll('.choice').forEach(c => {
+            c.classList.remove('selected');
+            c.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('selected');
+          btn.setAttribute('aria-pressed', 'true');
+          q.ui.selectedGraphEq = btn.dataset.eq;
+        });
+      });
+
+      const task2 = buildTaskCard('Explain why it matches',
+        `<textarea id="reasonBox" placeholder="Explain how the rate and starting value helped you choose."></textarea>`);
+      els.workArea.appendChild(task2);
+      q.ui.reason = task2.querySelector('#reasonBox');
+    }
+
+    function renderJustifyWrite(q) {
+      const task1 = buildTaskCard('Write the equation',
+        `<input id="eqInput" type="text" placeholder="Write the equation using the variables from the problem." />`);
+      const task2 = buildTaskCard('Explain the coefficient',
+        `<textarea id="coefBox" placeholder="What does the number next to the variable mean?"></textarea>`);
+      const task3 = buildTaskCard('Explain the dependent variable',
+        `<textarea id="depBox" placeholder="Which variable depends on the other, and why?"></textarea>`);
+
+      [task1, task2, task3].forEach(t => els.workArea.appendChild(t));
+      q.ui.eqInput  = task1.querySelector('#eqInput');
+      q.ui.coefBox  = task2.querySelector('#coefBox');
+      q.ui.depBox   = task3.querySelector('#depBox');
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       RENDER QUESTION
+    ───────────────────────────────────────────────────────────────── */
+    const TYPE_RENDERERS = {
+      mc_variable:         q => renderMCVariable(q),
+      equation_builder:    q => renderEquationBuilder(q),
+      table_fill:          q => renderTableFill(q, false),
+      variable_sort:       q => renderVariableSort(q),
+      equation_with_start: q => renderEquationWithStart(q),
+      table_fill_hard:     q => renderTableFill(q, true),
+      graph_match:         q => renderGraphMatch(q),
+      justify_write:       q => renderJustifyWrite(q)
+    };
+
+    function renderQuestion() {
+      const q = state.current;
+      hideFeedback();
+      resetTalkPanel();
+
+      els.checkBtn.disabled  = false;
+      els.resetBtn.disabled  = false;
+
+      els.missionKicker.textContent = `Question ${q.id}`;
+      els.missionTitle.textContent  = q.scenario.name;
+      els.missionDesc.textContent   = TYPE_DESCRIPTIONS[q.type] ?? 'Solve the relationship.';
+      els.typeLabel.textContent     = q.type.replace(/_/g, ' ');
+      els.difficultyLabel.textContent = `Band ${q.band}`;
+      els.scenarioText.textContent  = buildScenarioSentence(q.scenario, q.rate, q.start);
+      els.microText.textContent     = `Variables: ${q.scenario.xVar} = ${q.scenario.xLabel}; ${q.scenario.yVar} = ${q.scenario.yLabel}.`;
+
+      els.workArea.innerHTML = '';
+      q.ui = {};
+
+      const renderer = TYPE_RENDERERS[q.type];
+      if (renderer) {
+        renderer(q);
+      } else {
+        console.warn(`No renderer found for question type: ${q.type}`);
+      }
+
+      updateHud();
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       VALIDATION
+    ───────────────────────────────────────────────────────────────── */
+    const VALIDATORS = {
+      mc_variable(q) {
+        const reason = q.ui.reason.value.trim();
+        const xKey   = q.scenario.xLabel.split(' ')[0];
+        const yKey   = q.scenario.yLabel.split(' ')[0];
+        const ok = q.ui.selected === q.scenario.yLabel &&
+          containsAll(reason, [
+            ['depend','changes','determined'],
+            [q.scenario.xVar, xKey],
+            [q.scenario.yVar, yKey]
+          ]);
+        return { ok, warn: 'Choose the dependent variable and explain why it changes because of the other quantity.' };
+      },
+
+      equation_builder(q) {
+        const eq     = normaliseEq(q.ui.eqTokens.join(''));
+        const reason = q.ui.reason.value.trim();
+        const xKey   = q.scenario.xLabel.split(' ')[0];
+        const yKey   = q.scenario.yLabel.split(' ')[0];
+        const ok = eq === normaliseEq(q.equation) &&
+          containsAll(reason, [
+            [String(q.rate)],
+            [q.scenario.xVar, xKey],
+            [q.scenario.yVar, yKey]
+          ]);
+        return { ok, warn: 'Build the full equation and explain what the number and variable mean.' };
+      },
+
+      table_fill(q) {
+        const miss = (q.ui.missingInput.value || '').trim();
+        const rule = q.ui.rule.value.trim();
+        const ok = miss === q.ui.missingAnswer &&
+          containsAll(rule, [[String(q.rate)], ['multiply','times','each','per']]);
+        return { ok, warn: 'Find the missing value from the table pattern and describe the rule.' };
+      },
+
+      variable_sort(q) {
+        const reason = q.ui.reason.value.trim();
+        const xKey   = q.scenario.xLabel.split(' ')[0];
+        const yKey   = q.scenario.yLabel.split(' ')[0];
+        const ok = q.ui.depSelected === q.scenario.yLabel &&
+          q.ui.indSelected === q.scenario.xLabel &&
+          containsAll(reason, [
+            ['depend','changes','determined'],
+            [q.scenario.xVar, xKey],
+            [q.scenario.yVar, yKey]
+          ]);
+        return { ok, warn: 'Pick both variable roles and explain how you know.' };
+      },
+
+      equation_with_start(q) {
+        const eq          = normaliseEq(q.ui.eqTokens.join(''));
+        const reason      = q.ui.reason.value.trim();
+        const startMeaning = (q.ui.startMeaning?.value || '').trim();
+        const ok = eq === normaliseEq(q.equation) &&
+          containsAll(reason, [
+            [String(q.rate)],
+            [String(q.start)],
+            ['start','fee','begin','initial','before']
+          ]) &&
+          containsAll(startMeaning, [
+            [String(q.start)],
+            ['start','fee','initial','before','begin']
+          ]);
+        return { ok, warn: 'Include both the rate and starting value, and explain what the starting value means.' };
+      },
+
+      table_fill_hard(q) {
+        const miss = (q.ui.missingInput.value || '').trim();
+        const rule = q.ui.rule.value.trim();
+        const ok = miss === q.ui.missingAnswer &&
+          containsAll(rule, [
+            [String(q.rate)],
+            [String(q.start), 'add','plus','start','initial']
+          ]);
+        return { ok, warn: 'Find the missing value and describe the full rule with the rate and starting value.' };
+      },
+
+      graph_match(q) {
+        const reason = q.ui.reason.value.trim();
+        const startHint = q.start === 0 ? '0' : String(q.start);
+        const ok = normaliseEq(q.ui.selectedGraphEq || '') === normaliseEq(q.equation) &&
+          containsAll(reason, [
+            [String(q.rate)],
+            [startHint, 'start','initial','intercept']
+          ]);
+        return { ok, warn: 'Choose the matching rule and explain how the rate and starting value helped you.' };
+      },
+
+      justify_write(q) {
+        const eq   = normaliseEq(q.ui.eqInput.value || '');
+        const coef = q.ui.coefBox.value.trim();
+        const dep  = q.ui.depBox.value.trim();
+        const itemKey  = q.scenario.item.split(' ')[0];
+        const itemsKey = q.scenario.items.split(' ')[0];
+        const xKey     = q.scenario.xLabel.split(' ')[0];
+        const yKey     = q.scenario.yLabel.split(' ')[0];
+        const ok = eq === normaliseEq(q.equation) &&
+          containsAll(coef, [
+            [String(q.rate)],
+            [itemKey, itemsKey, q.scenario.xVar]
+          ]) &&
+          containsAll(dep, [
+            ['depend','changes','determined'],
+            [q.scenario.yVar, yKey],
+            [q.scenario.xVar, xKey]
+          ]);
+        return { ok, warn: 'Write the equation, explain the coefficient, and explain which variable depends on the other.' };
+      }
+    };
+
+    function validateQuestion() {
+      const q = state.current;
+      if (q.solved) return;
+
+      state.attempts += 1;
+
+      const validator = VALIDATORS[q.type];
+      if (!validator) {
+        console.warn(`No validator for type: ${q.type}`);
+        return;
+      }
+
+      const { ok, warn } = validator(q);
+
+      if (ok) {
+        q.solved           = true;
+        state.correctChecks += 1;
+        state.solved        += 1;
+        state.stars         += 3;
+        state.streak        += 1;
+        bumpStat('solvedCount');
+        bumpStat('starCount');
+        bumpStat('streakCount');
+        showFeedback('good', 'Correct! Discuss the relationship with your partner before moving on.');
+        unlockDiscussion(q);
+      } else {
+        state.streak = 0;
+        showFeedback('warn', warn);
+      }
+
+      updateHud();
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       NAVIGATION
+    ───────────────────────────────────────────────────────────────── */
+    function resetCurrentQuestion() {
+      state.current = makeQuestion(state.currentIndex);
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (!(state.current.solved && state.current.discussed)) return;
+      state.currentIndex += 1;
+      state.current       = makeQuestion(state.currentIndex);
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ─────────────────────────────────────────────────────────────────
+       INIT
+    ───────────────────────────────────────────────────────────────── */
+    function init() {
+      cacheEls();
+
+      state.current = makeQuestion(0);
+      renderQuestion();
+
+      els.checkBtn.addEventListener('click',   validateQuestion);
+      els.resetBtn.addEventListener('click',   resetCurrentQuestion);
+      els.nextBtn.addEventListener('click',    nextQuestion);
+      els.talkCheck1.addEventListener('change', enableNextIfReady);
+      els.talkCheck2.addEventListener('change', enableNextIfReady);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
