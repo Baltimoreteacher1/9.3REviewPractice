@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>6.EE.C.9 • Session 1 • Interactive Lesson</title>
+<style>
+    :root {
+        --bg-dark: #112650;
+        --bg-light: #f7fafc;
+        --accent-gold: #FFCD00;
+        --accent-teal: #008888;
+        --accent-orange: #D06000;
+        --accent-red: #CC2222;
+        --accent-green: #1A7A3C;
+        --text-main: #232323;
+        --card-bg: #ffffff;
+        --muted: #4A5568;
+        --shadow-soft: 0 10px 25px rgba(0,0,0,0.15);
+        --radius-lg: 16px;
+        --radius-md: 10px;
+        --transition-fast: 0.18s ease-out;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #0b1835, #183c74);
+        color: var(--text-main);
+    }
+
+    .shell {
+        max-width: 1050px;
+        margin: 32px auto;
+        padding: 0 16px 40px;
+    }
+
+    header.lesson-header {
+        background: radial-gradient(circle at top left, #1f4c96, #0b1835);
+        color: white;
+        padding: 20px 24px 18px;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: flex-end;
+    }
+
+    .header-main {
+        max-width: 640px;
+    }
+
+    .tagline {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent-gold);
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .title {
+        font-size: 22px;
+        font-weight: 800;
+        line-height: 1.3;
+        margin-bottom: 2px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    .meta-pill {
+        background: rgba(255,255,255,0.08);
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        margin-top: 8px;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .meta-pill span.dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--accent-teal);
+    }
+
+    .header-side {
+        text-align: right;
+    }
+
+    .objective-card {
+        background: rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .objective-card h4 {
+        margin: 0 0 4px;
+        font-size: 12px;
+        color: var(--accent-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .objective-card strong {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 2px;
+    }
+
+    main {
+        margin-top: 18px;
+    }
+
+    .progress-bar-shell {
+        background: rgba(0,0,0,0.3);
+        border-radius: 999px;
+        padding: 3px;
+        margin-bottom: 18px;
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset;
+    }
+
+    .progress-bar-fill {
+        height: 10px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--accent-gold), var(--accent-teal));
+        width: 0%;
+        transition: width 0.25s ease-out;
+    }
+
+    .progress-label {
+        margin-top: 6px;
+        font-size: 12px;
+        color: #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .card {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-soft);
+        padding: 20px 20px 16px;
+        margin-bottom: 18px;
+        display: none;
+    }
+
+    .card.active {
+        display: block;
+    }
+
+    .card-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--bg-dark);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .chip {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(17,38,80,0.06);
+        color: var(--muted);
+        font-weight: 600;
+    }
+
+    .card-tag {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(0,136,136,0.1);
+        color: var(--accent-teal);
+        font-weight: 600;
+    }
+
+    .card-body {
+        margin-top: 4px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text-main);
+    }
+
+    .info-strip {
+        background: #edf2ff;
+        border-radius: var(--radius-md);
+        padding: 8px 10px;
+        font-size: 13px;
+        margin: 10px 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .info-strip-emoji {
+        font-size: 16px;
+    }
+
+    h3.section-label {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin: 12px 0 4px;
+    }
+
+    .prompt {
+        font-weight: 600;
+        margin: 6px 0 4px;
+        color: var(--bg-dark);
+    }
+
+    .small-note {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+
+    .input-row {
+        margin: 4px 0 10px;
+    }
+
+    textarea,
+    input[type="text"] {
+        width: 100%;
+        font-family: inherit;
+        font-size: 14px;
+        padding: 8px 9px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e0;
+        outline: none;
+        resize: vertical;
+        min-height: 40px;
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+
+    textarea:focus,
+    input[type="text"]:focus {
+        border-color: var(--accent-teal);
+        box-shadow: 0 0 0 1px rgba(0,136,136,0.2);
+        background: #f7fafc;
+    }
+
+    .equation-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .equation-label {
+        font-weight: 600;
+        color: var(--bg-dark);
+        font-size: 14px;
+    }
+
+    .equation-inline {
+        font-family: "Menlo", "Consolas", monospace;
+        background: #f7fafc;
+        padding: 4px 6px;
+        border-radius: 6px;
+        border: 1px dashed #cbd5e0;
+        font-size: 13px;
+    }
+
+    .drag-area {
+        border-radius: var(--radius-md);
+        border: 1px dashed #cbd5e0;
+        padding: 10px;
+        margin: 8px 0 12px;
+        min-height: 52px;
+        background: #f8fafc;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .tile-bank {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 8px 0 12px;
+    }
+
+    .tile {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #edf2ff;
+        border: 1px solid #c3dafe;
+        font-size: 12px;
+        cursor: grab;
+        user-select: none;
+        transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .tile[data-bank="true"] {
+        background: #fefcbf;
+        border-color: #faf089;
+    }
+
+    .tile.dragging {
+        opacity: 0.7;
+        transform: scale(1.03);
+        box-shadow: 0 7px 16px rgba(0,0,0,0.2);
+    }
+
+    .drop-slot {
+        min-width: 88px;
+        min-height: 32px;
+        border-radius: 999px;
+        border: 1px dashed #cbd5e0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: var(--muted);
+        padding: 4px 6px;
+        background: white;
+    }
+
+    .drop-slot.filled {
+        border-style: solid;
+        border-color: var(--accent-teal);
+    }
+
+    .checklist {
+        list-style: none;
+        padding-left: 0;
+        margin: 6px 0 8px;
+        font-size: 13px;
+    }
+
+    .checklist li {
+        margin: 3px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .checklist input[type="checkbox"] {
+        margin-top: 2px;
+        cursor: pointer;
+    }
+
+    .discussion-box {
+        border-radius: var(--radius-md);
+        background: #f0fff4;
+        border: 1px solid #9ae6b4;
+        padding: 8px 10px;
+        font-size: 13px;
+        margin: 8px 0 6px;
+    }
+
+    .discussion-box h4 {
+        margin: 0 0 4px;
+        font-size: 13px;
+        color: var(--accent-green);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .discussion-q {
+        margin: 4px 0;
+    }
+
+    .controls-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 14px;
+        gap: 10px;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    button {
+        border-radius: 999px;
+        border: none;
+        font-family: inherit;
+        font-size: 13px;
+        padding: 7px 14px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast), opacity var(--transition-fast);
+    }
+
+    button:disabled {
+        opacity: 0.55;
+        cursor: default;
+        box-shadow: none;
+        transform: none;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--accent-teal), var(--bg-dark));
+        color: white;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+    }
+
+    .btn-primary:not(:disabled):hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.32);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: var(--bg-dark);
+        border: 1px solid #d2d6e0;
+    }
+
+    .btn-outline:not(:disabled):hover {
+        background: #edf2ff;
+    }
+
+    .pill-status {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+    }
+
+    .pill-status strong {
+        color: var(--accent-teal);
+    }
+
+    .required-note {
+        font-size: 11px;
+        color: var(--accent-red);
+    }
+
+    .valid-indicator {
+        font-size: 11px;
+        color: var(--accent-green);
+        margin-left: 6px;
+    }
+
+    .table-wrapper {
+        border-radius: var(--radius-md);
+        background: #f7fafc;
+        padding: 10px;
+        border: 1px solid #e2e8f0;
+        margin: 8px 0 10px;
+        overflow-x: auto;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 13px;
+    }
+
+    th, td {
+        padding: 6px 8px;
+        border: 1px solid #cbd5e0;
+        text-align: center;
+    }
+
+    th {
+        background: #edf2ff;
+        font-weight: 600;
+    }
+
+    .footer-note {
+        text-align: center;
+        color: #e2e8f0;
+        font-size: 11px;
+        margin-top: 10px;
+        opacity: 0.9;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+        header.lesson-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .header-side {
+            text-align: left;
+        }
+        .card {
+            padding: 16px 14px 14px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="shell">
+    <header class="lesson-header">
+        <div class="header-main">
+            <div class="tagline">SESSION 1 • 6.EE.C.9 • GRADE 6 MATH</div>
+            <div class="title">Write Equations to Represent Relationships Between Two Variables</div>
+            <div class="subtitle">
+                Interactive partner practice with drag‑and‑drop, TWR sentence stems, writing, and discussion prompts.
+            </div>
+            <div class="meta-pill">
+                <span class="dot"></span>
+                <span>Recreation World &amp; Memberships</span>
+                <span>•</span>
+                <span>Parking Garage &amp; Streaming Services</span>
+            </div>
+        </div>
+        <div class="header-side">
+            <div class="objective-card">
+                <h4>Learning Goals</h4>
+                <strong>Content:</strong> I can use variables and equations to represent relationships between two quantities.<br>
+                <strong>Language:</strong> I can explain how a change in one variable affects the other variable.
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="progress-bar-shell">
+            <div class="progress-bar-fill" id="progressFill"></div>
+            <div class="progress-label">
+                <span id="progressText">Card 1 of 7</span>
+                <span id="completionText">Complete all checks to unlock Next</span>
+            </div>
+        </div>
+
+        <!-- CARD 1: DO NOW — Pencils -->
+        <section class="card active" data-card="1">
+            <div class="card-header-row">
+                <div class="card-title">
+                    Do Now — Variables &amp; Expressions
+                    <span class="chip">Warm‑Up</span>
+                </div>
+                <div class="card-tag">Problem 1: Pencils</div>
+            </div>
+            <div class="card-body">
+                <div class="info-strip">
+                    <span class="info-strip-emoji">📝</span>
+                    <span>A store sells pencils for 0.50 dollars each. Work with your partner to write an expression and explain which quantity depends on the other.</span>
+                </div>
+
+                <h3 class="section-label">Part A • Expression</h3>
+                <p class="prompt">1. Write a multiplication expression for the cost of buying <em>p</em> pencils.</p>
+                <div class="equation-box">
+                    <span class="equation-label">My expression:</span>
+                    <input type="text" id="c1_expr" placeholder="Example: 0.50 × p" aria-label="Cost expression">
+                </div>
+                <div class="small-note">Write a multiplication expression using <code>p</code> as the number of pencils.</div>
+
+                <h3 class="section-label">Part B • Which Depends on Which?</h3>
+                <p class="prompt">2. Which quantity depends on the other?</p>
+                <div class="tile-bank" id="c1_depend_bank">
+                    <div class="tile" draggable="true" data-id="cost">cost</div>
+                    <div class="tile" draggable="true" data-id="pencils">number of pencils</div>
+                    <div class="tile" draggable="true" data-id="both">both</div>
+                </div>
+                <div class="drag-area" id="c1_depend_drop">
+                    <div class="drop-slot" data-accept="depend">Drop your choice here</div>
+                </div>
+
+                <h3 class="section-label">Part C • TWR Sentence Starter</h3>
+                <p class="prompt">3. Complete the TWR sentence to explain the relationship.</p>
+                <div class="tile-bank" id="c1_twr_bank">
+                    <div class="tile" draggable="true" data-id="depends">depends on</div>
+                    <div class="tile" draggable="true" data-id="because">because</div>
+                    <div class="tile" draggable="true" data-id="cost_word">the total cost</div>
+                    <div class="tile" draggable="true" data-id="pencils_word">the number of pencils</div>
+                </div>
+                <div class="drag-area" id="c1_twr_sentence">
+                    <span class="equation-inline">The total cost</span>
+                    <span class="equation-inline drop-slot" data-accept="phrase">slot 1</span>
+                    <span class="equation-inline">the number of pencils</span>
+                    <span class="equation-inline drop-slot" data-accept="phrase">slot 2</span>
+                    <span class="equation-inline">the cost changes when you buy more or fewer pencils.</span>
+                </div>
+                <div class="small-note">Drag and drop tiles to build a precise explanation.</div>
+
+                <div class="discussion-box">
+                    <h4>Partner Discussion</h4>
+                    <div class="discussion-q">• How would the expression change if pencils cost 0.75 dollars each instead of 0.50 dollars?</div>
+                    <div class="discussion-q">• In your own words, what does it mean for the cost to <em>depend on</em> the number of pencils?</div>
+                </div>
+
+                <ul class="checklist">
+                    <li>
+                        <input type="checkbox" data-required="true" id="c1_chk1">
+                        <label for="c1_chk1">We wrote a multiplication expression using <code>p</code>.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c1_chk2">
+                        <label for="c1_chk2">We chose which quantity depends on the other using drag‑and‑drop.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c1_chk3">
+                        <label for="c1_chk3">We built and read our TWR sentence together.</label>
+                    </li>
+                </ul>
+                <div class="required-note">All three checkboxes must be checked to move on.</div>
+
+                <div class="controls-row">
+                    <span class="pill-status">Step 1 • Warm‑up relationship</span>
+                    <div class="nav-buttons">
+                        <button class="btn-outline" disabled>Back</button>
+                        <button class="btn-primary" data-next="2" disabled>Next →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 2: Recreation World Notice & Wonder + Misconception Trap -->
+        <section class="card" data-card="2">
+            <div class="card-header-row">
+                <div class="card-title">
+                    Recreation World — Notice &amp; Wonder
+                    <span class="chip">Be Curious</span>
+                </div>
+                <div class="card-tag">Membership Model</div>
+            </div>
+            <div class="card-body">
+                <div class="info-strip">
+                    <span class="info-strip-emoji">🎯</span>
+                    <span>Situation: Recreation World charges 24.95 dollars per month. Miguel wants to plan his budget over several months.</span>
+                </div>
+
+                <h3 class="section-label">Part A • Notice</h3>
+                <p class="prompt">1. I NOTICE… (write at least 2 things you notice about this situation).</p>
+                <div class="input-row">
+                    <textarea id="c2_notice1" placeholder="Notice 1:"></textarea>
+                </div>
+                <div class="input-row">
+                    <textarea id="c2_notice2" placeholder="Notice 2:"></textarea>
+                </div>
+
+                <h3 class="section-label">Part B • Quantities &amp; TWR</h3>
+                <p class="prompt">Turn &amp; Talk: What are the two quantities in this situation?</p>
+                <div class="equation-box">
+                    <span class="equation-label">TWR:</span>
+                    <textarea id="c2_twr" placeholder="The total cost depends on ___ because ___ (use words like quantity, months, total cost)."></textarea>
+                </div>
+
+                <h3 class="section-label">Part C • Misconception Trap (Drag &amp; Drop)</h3>
+                <p class="prompt">
+                    Situation: 24.95 dollars per month membership, where <em>m</em> is months and <em>c</em> is total cost.
+                    Drag one equation card into the “Correct Equation” box. Then briefly explain.
+                </p>
+                <div class="tile-bank" id="c2_eq_bank">
+                    <div class="tile" draggable="true" data-id="cardA">A: c = 24.95 × m</div>
+                    <div class="tile" draggable="true" data-id="cardB">B: c = 24.95 + m</div>
+                    <div class="tile" draggable="true" data-id="cardC">C: m = 24.95 × c</div>
+                </div>
+                <div class="drag-area">
+                    <div class="drop-slot" data-accept="eq" id="c2_eq_slot">Correct Equation</div>
+                </div>
+                <div class="input-row">
+                    <textarea id="c2_eq_explain" placeholder="I chose card ___ because... (Explain why the other equations do not represent the relationship correctly.)"></textarea>
+                </div>
+
+                <h3 class="section-label">Part D • Wonder</h3>
+                <p class="prompt">I WONDER… Write a question you still have about the membership or equation.</p>
+                <div class="input-row">
+                    <textarea id="c2_wonder" placeholder="Q:"></textarea>
+                </div>
+
+                <div class="discussion-box">
+                    <h4>Partner Discussion</h4>
+                    <div class="discussion-q">• Why is it important for the total cost to be the dependent variable in this context?</div>
+                    <div class="discussion-q">• What is a common mistake students might make when writing the equation for this situation?</div>
+                </div>
+
+                <ul class="checklist">
+                    <li>
+                        <input type="checkbox" data-required="true" id="c2_chk1">
+                        <label for="c2_chk1">We wrote at least 2 “I notice…” statements.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c2_chk2">
+                        <label for="c2_chk2">We chose a correct equation card and explained our reasoning.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c2_chk3">
+                        <label for="c2_chk3">We wrote at least one “I wonder…” question.</label>
+                    </li>
+                </ul>
+                <div class="required-note">All required parts must be completed before moving on.</div>
+
+                <div class="controls-row">
+                    <span class="pill-status">Step 2 • Interpret the membership story</span>
+                    <div class="nav-buttons">
+                        <button class="btn-outline" data-prev="1">← Back</button>
+                        <button class="btn-primary" data-next="3" disabled>Next →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 3: Broken Table Repair & Pattern -->
+        <section class="card" data-card="3">
+            <div class="card-header-row">
+                <div class="card-title">
+                    Table of Values — Broken Table Repair
+                    <span class="chip">Guided Notes</span>
+                </div>
+                <div class="card-tag">Months &amp; Cost</div>
+            </div>
+            <div class="card-body">
+                <div class="info-strip">
+                    <span class="info-strip-emoji">📊</span>
+                    <span>A table of values shows how two quantities are related. The independent variable (input) goes in the left column. The dependent variable (output) goes in the right column.</span>
+                </div>
+
+                <h3 class="section-label">Part A • Fix the Table</h3>
+                <p class="prompt">Months (m) — independent • Total Cost (c) in dollars — dependent.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Months (m)</th>
+                                <th>Total Cost (c)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>24.95</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><input type="text" id="c3_row2" placeholder="?" style="width:80px;"></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><input type="text" id="c3_row3" placeholder="?" style="width:80px;"></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><input type="text" id="c3_row4" placeholder="?" style="width:80px;"></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>124.75</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>249.50</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="small-note">Use the relationship <span class="equation-inline">c = 24.95m</span> to correct the missing values.</div>
+
+                <h3 class="section-label">Part B • Pattern Check (TWR)</h3>
+                <p class="prompt">Complete the sentence using the pattern you see.</p>
+                <div class="tile-bank" id="c3_pattern_bank">
+                    <div class="tile" draggable="true" data-id="increases">increases</div>
+                    <div class="tile" draggable="true" data-id="24_95">$24.95</div>
+                    <div class="tile" draggable="true" data-id="linear">a linear relationship</div>
+                </div>
+                <div class="drag-area" id="c3_pattern_sentence">
+                    <span class="equation-inline">Each time m increases by 1, c</span>
+                    <span class="equation-inline drop-slot" data-accept="pattern">slot 1</span>
+                    <span class="equation-inline">by</span>
+                    <span class="equation-inline drop-slot" data-accept="pattern">slot 2</span>
+                    <span class="equation-inline">. This means the relationship is</span>
+                    <span class="equation-inline drop-slot" data-accept="pattern">slot 3</span>
+                    <span class="equation-inline">.</span>
+                </div>
+
+                <div class="discussion-box">
+                    <h4>Partner Discussion</h4>
+                    <div class="discussion-q">• How does the table help you see the constant rate of change?</div>
+                    <div class="discussion-q">• Why is it helpful that the cost increases by the same amount each month?</div>
+                </div>
+
+                <ul class="checklist">
+                    <li>
+                        <input type="checkbox" data-required="true" id="c3_chk1">
+                        <label for="c3_chk1">We filled in all missing table values using multiplication.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c3_chk2">
+                        <label for="c3_chk2">We completed the pattern sentence using drag‑and‑drop tiles.</label>
+                    </li>
+                </ul>
+
+                <div class="controls-row">
+                    <span class="pill-status">Step 3 • Analyze the pattern</span>
+                    <div class="nav-buttons">
+                        <button class="btn-outline" data-prev="2">← Back</button>
+                        <button class="btn-primary" data-next="4" disabled>Next →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 4: Equation Builder -->
+        <section class="card" data-card="4">
+            <div class="card-header-row">
+                <div class="card-title">
+                    Equation Builder — From Words to Symbols
+                    <span class="chip">Guided Notes</span>
+                </div>
+                <div class="card-tag">c and m</div>
+            </div>
+            <div class="card-body">
+                <div class="info-strip">
+                    <span class="info-strip-emoji">⚙️</span>
+                    <span>Build the equation step‑by‑step: identify quantities, assign letters, then write the equation in words and symbols.</span>
+                </div>
+
+                <h3 class="section-label">Part A • Identify &amp; Name Variables</h3>
+                <p class="prompt">1. Identify the two quantities and name each variable.</p>
+                <div class="input-row">
+                    <input type="text" id="c4_quant1" placeholder="(1) First quantity (example: number of months)" />
+                </div>
+                <div class="input-row">
+                    <input type="text" id="c4_quant2" placeholder="(2) Second quantity (example: total cost in dollars)" />
+                </div>
+                <div class="input-row">
+                    <input type="text" id="c4_var_ind" placeholder="Independent → letter:" />
+                </div>
+                <div class="input-row">
+                    <input type="text" id="c4_var_dep" placeholder="Dependent → letter:" />
+                </div>
+
+                <h3 class="section-label">Part B • Equation Builder (Drag &amp; Drop)</h3>
+                <p class="prompt">2. Drag the tiles into the frame to build the equation.</p>
+                <div class="tile-bank" id="c4_eq_bank">
+                    <div class="tile" draggable="true" data-id="c">c</div>
+                    <div class="tile" draggable="true" data-id="eq">=</div>
+                    <div class="tile" draggable="true" data-id="24_95">24.95</div>
+                    <div class="tile" draggable="true" data-id="times">×</div>
+                    <div class="tile" draggable="true" data-id="m">m</div>
+                </div>
+                <div class="drag-area" id="c4_eq_frame">
+                    <span class="drop-slot" data-accept="eqslot">slot 1</span>
+                    <span class="drop-slot" data-accept="eqslot">slot 2</span>
+                    <span class="drop-slot" data-accept="eqslot">slot 3</span>
+                    <span class="drop-slot" data-accept="eqslot">slot 4</span>
+                    <span class="drop-slot" data-accept="eqslot">slot 5</span>
+                </div>
+
+                <div class="input-row">
+                    <textarea id="c4_word_sentence" placeholder="Write: “The total cost = 24.95 times the number of months.” in your own words."></textarea>
+                </div>
+
+                <h3 class="section-label">Part C • Use the Equation</h3>
+                <p class="prompt">3. Use your equation to find the total cost when m = 7 months.</p>
+                <div class="equation-box">
+                    <span class="equation-label">Show work:</span>
+                    <textarea id="c4_work" placeholder="Substitute m = 7 into your equation and show multiplication."></textarea>
+                </div>
+                <div class="equation-box">
+                    <span class="equation-label">Total cost:</span>
+                    <input type="text" id="c4_answer" placeholder="Answer in dollars">
+                </div>
+
+                <div class="discussion-box">
+                    <h4>Partner Discussion</h4>
+                    <div class="discussion-q">• How does your equation match the table you used before?</div>
+                    <div class="discussion-q">• How could you quickly find the cost for 20 months without building a full table?</div>
+                </div>
+
+                <ul class="checklist">
+                    <li>
+                        <input type="checkbox" data-required="true" id="c4_chk1">
+                        <label for="c4_chk1">We named both variables and identified independent vs. dependent.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c4_chk2">
+                        <label for="c4_chk2">We built the equation using drag‑and‑drop tiles.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c4_chk3">
+                        <label for="c4_chk3">We used the equation to find the total cost for 7 months.</label>
+                    </li>
+                </ul>
+
+                <div class="controls-row">
+                    <span class="pill-status">Step 4 • Build and use the equation</span>
+                    <div class="nav-buttons">
+                        <button class="btn-outline" data-prev="3">← Back</button>
+                        <button class="btn-primary" data-next="5" disabled>Next →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 5: Parking Garage – Independent Practice -->
+        <section class="card" data-card="5">
+            <div class="card-header-row">
+                <div class="card-title">
+                    Parking Garage — Independent Practice
+                    <span class="chip">Apply</span>
+                </div>
+                <div class="card-tag">New Situation</div>
+            </div>
+            <div class="card-body">
+                <div class="info-strip">
+                    <span class="info-strip-emoji">🅿️</span>
+                    <span>New situation: A parking garage charges 3.50 dollars per hour. Let h = hours, and c = total cost in dollars.</span>
+                </div>
+
+                <h3 class="section-label">Part A • Write the Equation</h3>
+                <p class="prompt">1. Write the equation that relates c and h.</p>
+                <div class="equation-box">
+                    <span class="equation-label">My equation:</span>
+                    <input type="text" id="c5_eq" placeholder="Example: c = 3.50 × h">
+                </div>
+
+                <h3 class="section-label">Part B • Complete the Table</h3>
+                <p class="prompt">2. Complete the table using your equation.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>h (hours)</th>
+                                <th>c (cost)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" id="c5_t1" placeholder="?" style="width:80px;"></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><input type="text" id="c5_t3" placeholder="?" style="width:80px;"></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><input type="text" id="c5_t5" placeholder="?" style="width:80px;"></td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td><input type="text" id="c5_t8" placeholder="?" style="width:80px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="section-label">Part C • Find a Specific Cost</h3>
+                <p class="prompt">3. Find the cost for 12 hours.</p>
+                <div class="equation-box">
+                    <span class="equation-label">Show work:</span>
+                    <textarea id="c5_work" placeholder="Use your equation to find c when h = 12."></textarea>
+                </div>
+                <div class="equation-box">
+                    <span class="equation-label">Answer:</span>
+                    <input type="text" id="c5_answer" placeholder="Total cost in dollars">
+                </div>
+
+                <h3 class="section-label">Part D • TWR Sentence Build (Drag &amp; Drop)</h3>
+                <p class="prompt">4. Use tiles to build the sentence: “In this situation, c = 3.50 × h means that total cost depends on the hours.”</p>
+                <div class="tile-bank" id="c5_twr_bank">
+                    <div class="tile" draggable="true" data-id="in_this">In this</div>
+                    <div class="tile" draggable="true" data-id="situation">situation,</div>
+                    <div class="tile" draggable="true" data-id="equation">c = 3.50 × h</div>
+                    <div class="tile" draggable="true" data-id="means">means that</div>
+                    <div class="tile" draggable="true" data-id="total_cost">total cost</div>
+                    <div class="tile" draggable="true" data-id="depends_on">depends on</div>
+                    <div class="tile" draggable="true" data-id="hours">the hours.</div>
+                </div>
+                <div class="drag-area" id="c5_twr_sentence">
+                    <span class="drop-slot" data-accept="twr">slot 1</span>
+                    <span class="drop-slot" data-accept="twr">slot 2</span>
+                    <span class="drop-slot" data-accept="twr">slot 3</span>
+                    <span class="drop-slot" data-accept="twr">slot 4</span>
+                    <span class="drop-slot" data-accept="twr">slot 5</span>
+                    <span class="drop-slot" data-accept="twr">slot 6</span>
+                    <span class="drop-slot" data-accept="twr">slot 7</span>
+                </div>
+
+                <div class="discussion-box">
+                    <h4>Partner Discussion</h4>
+                    <div class="discussion-q">• How is this equation similar to the Recreation World equation? How is it different?</div>
+                    <div class="discussion-q">• Which variable would you graph on the horizontal axis if you made a graph of this situation? Why?</div>
+                </div>
+
+                <ul class="checklist">
+                    <li>
+                        <input type="checkbox" data-required="true" id="c5_chk1">
+                        <label for="c5_chk1">We wrote an equation relating c and h.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c5_chk2">
+                        <label for="c5_chk2">We completed all entries in the table.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c5_chk3">
+                        <label for="c5_chk3">We built the TWR sentence using drag‑and‑drop.</label>
+                    </li>
+                </ul>
+
+                <div class="controls-row">
+                    <span class="pill-status">Step 5 • Apply to a new context</span>
+                    <div class="nav-buttons">
+                        <button class="btn-outline" data-prev="4">← Back</button>
+                        <button class="btn-primary" data-next="6" disabled>Next →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 6: Compare Plans (Extension) -->
+        <section class="card" data-card="6">
+            <div class="card-header-row">
+                <div class="card-title">
+                    Compare Membership Plans — What Changed?
+                    <span class="chip">Extension</span>
+                </div>
+                <div class="card-tag">Recreation World vs. Discount</div>
+            </div>
+            <div class="card-body">
+                <div class="info-strip">
+                    <span class="info-strip-emoji">🔍</span>
+                    <span>Gym A: c = 24.95m. Gym B: c = 18m + 40. Explore how changing the rate or adding a fee affects the total cost.</span>
+                </div>
+
+                <h3 class="section-label">Part A • Describe Both Plans</h3>
+                <p class="prompt">1. Write an equation for each gym and describe what each number means.</p>
+                <div class="input-row">
+                    <textarea id="c6_planA" placeholder="Gym A: Describe c = 24.95m in words."></textarea>
+                </div>
+                <div class="input-row">
+                    <textarea id="c6_planB" placeholder="Gym B: Describe c = 18m + 40 in words. Explain 18 and 40."></textarea>
+                </div>
+
+                <h3 class="section-label">Part B • When is B Cheaper?</h3>
+                <p class="prompt">2. After how many months is Gym B cheaper than Gym A? Show work.</p>
+                <div class="equation-box">
+                    <span class="equation-label">Show work:</span>
+                    <textarea id="c6_work" placeholder="Use equations or a table to compare total cost for different values of m."></textarea>
+                </div>
+                <div class="equation-box">
+                    <span class="equation-label">Gym B is cheaper after:</span>
+                    <input type="text" id="c6_answer" placeholder="Number of months">
+                </div>
+
+                <h3 class="section-label">Part C • What Changed? (Reflection)</h3>
+                <p class="prompt">3. Complete the sentence starter to describe what changed and what stayed the same.</p>
+                <div class="input-row">
+                    <textarea id="c6_what_changed" placeholder="Although Gym B has a setup fee, ____."></textarea>
+                </div>
+
+                <div class="discussion-box">
+                    <h4>Partner Discussion</h4>
+                    <div class="discussion-q">• What stays the same between the two gyms? What is different?</div>
+                    <div class="discussion-q">• How does adding a one‑time fee change the graph or table of values?</div>
+                </div>
+
+                <ul class="checklist">
+                    <li>
+                        <input type="checkbox" data-required="true" id="c6_chk1">
+                        <label for="c6_chk1">We described both equations in words.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c6_chk2">
+                        <label for="c6_chk2">We determined when Gym B becomes cheaper and showed our thinking.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c6_chk3">
+                        <label for="c6_chk3">We completed the “What changed?” writing task.</label>
+                    </li>
+                </ul>
+
+                <div class="controls-row">
+                    <span class="pill-status">Step 6 • Compare two variable relationships</span>
+                    <div class="nav-buttons">
+                        <button class="btn-outline" data-prev="5">← Back</button>
+                        <button class="btn-primary" data-next="7" disabled>Next →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 7: Closing Reflection & Exit Ticket -->
+        <section class="card" data-card="7">
+            <div class="card-header-row">
+                <div class="card-title">
+                    Closing Reflection &amp; Exit Ticket
+                    <span class="chip">Synthesize</span>
+                </div>
+                <div class="card-tag">Session 1 Wrap‑Up</div>
+            </div>
+            <div class="card-body">
+                <div class="info-strip">
+                    <span class="info-strip-emoji">✅</span>
+                    <span>Pull everything together: explain what you learned, define key vocabulary, and show what you can do with equations.</span>
+                </div>
+
+                <h3 class="section-label">Part A • Reflection Writing</h3>
+                <p class="prompt">1. Today I learned that equations can be used to… because…</p>
+                <div class="input-row">
+                    <textarea id="c7_reflect1" placeholder="Today I learned that equations can be used to ___ because ___." ></textarea>
+                </div>
+
+                <p class="prompt">2. In the equation c = 24.95m, the independent variable is… because…</p>
+                <div class="input-row">
+                    <textarea id="c7_reflect2" placeholder="The independent variable in c = 24.95m is ___ because ___." ></textarea>
+                </div>
+
+                <p class="prompt">3. One thing I am still unsure about is…</p>
+                <div class="input-row">
+                    <textarea id="c7_reflect3" placeholder="My question:"></textarea>
+                </div>
+
+                <h3 class="section-label">Part B • TWR Sentence Build</h3>
+                <p class="prompt">Use tiles to build the sentence: “An equation represents a relationship between two variables because both can change.”</p>
+                <div class="tile-bank" id="c7_twr_bank">
+                    <div class="tile" draggable="true" data-id="an_eq">An equation</div>
+                    <div class="tile" draggable="true" data-id="represents">represents</div>
+                    <div class="tile" draggable="true" data-id="a_rel">a relationship</div>
+                    <div class="tile" draggable="true" data-id="between">between</div>
+                    <div class="tile" draggable="true" data-id="two_vars">two variables</div>
+                    <div class="tile" draggable="true" data-id="because">because</div>
+                    <div class="tile" draggable="true" data-id="both_change">both can change.</div>
+                </div>
+                <div class="drag-area" id="c7_twr_sentence">
+                    <span class="drop-slot" data-accept="twr7">slot 1</span>
+                    <span class="drop-slot" data-accept="twr7">slot 2</span>
+                    <span class="drop-slot" data-accept="twr7">slot 3</span>
+                    <span class="drop-slot" data-accept="twr7">slot 4</span>
+                    <span class="drop-slot" data-accept="twr7">slot 5</span>
+                    <span class="drop-slot" data-accept="twr7">slot 6</span>
+                    <span class="drop-slot" data-accept="twr7">slot 7</span>
+                </div>
+
+                <h3 class="section-label">Part C • Quick Vocab Check</h3>
+                <p class="prompt">Define each word in your own words.</p>
+                <div class="input-row">
+                    <input type="text" id="c7_var" placeholder="variable:" />
+                </div>
+                <div class="input-row">
+                    <input type="text" id="c7_eq" placeholder="equation:" />
+                </div>
+                <div class="input-row">
+                    <input type="text" id="c7_dep" placeholder="dependent variable:" />
+                </div>
+                <div class="input-row">
+                    <input type="text" id="c7_ind" placeholder="independent variable:" />
+                </div>
+
+                <div class="discussion-box">
+                    <h4>Partner Discussion</h4>
+                    <div class="discussion-q">• Which part of today’s lesson helped you most to understand relationships between variables?</div>
+                    <div class="discussion-q">• How confident do you feel about explaining which variable depends on the other? What would help you feel even more confident?</div>
+                </div>
+
+                <ul class="checklist">
+                    <li>
+                        <input type="checkbox" data-required="true" id="c7_chk1">
+                        <label for="c7_chk1">We completed all reflection questions in Part A.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c7_chk2">
+                        <label for="c7_chk2">We built the TWR sentence using the tiles.</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" data-required="true" id="c7_chk3">
+                        <label for="c7_chk3">We defined all four vocabulary words.</label>
+                    </li>
+                </ul>
+
+                <div class="controls-row">
+                    <span class="pill-status"><strong>All steps complete</strong> • Session 1</span>
+                    <div class="nav-buttons">
+                        <button class="btn-outline" data-prev="6">← Back</button>
+                        <button class="btn-primary" id="finishBtn" disabled>Finish ✔</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer-note" id="footerNote">
+            Progress will show here after you finish each card.
+        </div>
+    </main>
+</div>
+
+<script>
+(function() {
+    const totalCards = 7;
+    let currentCard = 1;
+
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const completionText = document.getElementById('completionText');
+    const footerNote = document.getElementById('footerNote');
+    const finishBtn = document.getElementById('finishBtn');
+
+    function updateProgress() {
+        const completionRatio = currentCard / totalCards;
+        const pct = Math.round(completionRatio * 100);
+        progressFill.style.width = pct + '%';
+        progressText.textContent = 'Card ' + currentCard + ' of ' + totalCards;
+
+        if (currentCard < totalCards) {
+            completionText.textContent = 'Complete all checks on this card to unlock Next';
+        } else {
+            completionText.textContent = 'Complete all checks to activate Finish';
+        }
+    }
+
+    function showCard(n) {
+        currentCard = n;
+        cards.forEach(card => {
+            const idx = parseInt(card.getAttribute('data-card'), 10);
+            card.classList.toggle('active', idx === currentCard);
+        });
+        updateProgress();
+        updateFooter();
+        validateCard(currentCard);
+    }
+
+    function updateFooter() {
+        const completed = cards.filter(card => {
+            const checks = card.querySelectorAll('input[type="checkbox"][data-required="true"]');
+            return checks.length > 0 && Array.from(checks).every(cb => cb.checked);
+        }).length;
+        if (completed === 0) {
+            footerNote.textContent = 'Complete each card in order. Check all required boxes to unlock Next.';
+        } else if (completed < totalCards) {
+            footerNote.textContent = 'You have fully completed ' + completed +
+                ' out of ' + totalCards + ' cards. Keep going!';
+        } else {
+            footerNote.textContent = 'All cards complete! You can now click Finish.';
+        }
+    }
+
+    // Navigation
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+
+        const next = btn.getAttribute('data-next');
+        const prev = btn.getAttribute('data-prev');
+
+        if (next && !btn.disabled) {
+            showCard(parseInt(next, 10));
+        } else if (prev) {
+            showCard(parseInt(prev, 10));
+        }
+    });
+
+    // Validation helper – each card: must have all required checkboxes checked
+    function validateCard(cardIndex) {
+        const card = cards.find(c => parseInt(c.getAttribute('data-card'), 10) === cardIndex);
+        if (!card) return;
+
+        const checks = card.querySelectorAll('input[type="checkbox"][data-required="true"]');
+        const allChecked = Array.from(checks).every(cb => cb.checked);
+
+        const nextBtn = card.querySelector('button[data-next]');
+        const isLast = cardIndex === totalCards;
+
+        if (nextBtn) {
+            nextBtn.disabled = !allChecked;
+        }
+        if (isLast && finishBtn) {
+            finishBtn.disabled = !allChecked;
+        }
+        updateFooter();
+    }
+
+    document.addEventListener('change', (e) => {
+        const cb = e.target;
+        if (cb.matches('input[type="checkbox"][data-required="true"]')) {
+            const cardEl = cb.closest('.card');
+            const idx = parseInt(cardEl.getAttribute('data-card'), 10);
+            validateCard(idx);
+        }
+    });
+
+    // Drag & Drop
+    let dragSource = null;
+
+    function handleDragStart(e) {
+        const tile = e.target.closest('.tile');
+        if (!tile) return;
+        dragSource = tile;
+        tile.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', tile.dataset.id || '');
+    }
+
+    function handleDragEnd(e) {
+        const tile = e.target.closest('.tile');
+        if (tile) {
+            tile.classList.remove('dragging');
+        }
+    }
+
+    function handleDragOver(e) {
+        if (!dragSource) return;
+        const slot = e.target.closest('.drop-slot');
+        if (!slot) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    }
+
+    function handleDrop(e) {
+        if (!dragSource) return;
+        const slot = e.target.closest('.drop-slot');
+        if (!slot) return;
+        e.preventDefault();
+
+        // Remove existing tile in this slot (if any)
+        const existingTile = slot.querySelector('.tile');
+        if (existingTile) {
+            // send existing tile back to its nearest tile-bank or parent drag-area
+            const parentBank = slot.closest('.card').querySelector('.tile-bank');
+            if (parentBank) {
+                existingTile.dataset.bank = 'true';
+                parentBank.appendChild(existingTile);
+            }
+        }
+
+        slot.textContent = ''; // clear placeholder text
+        slot.classList.add('filled');
+        slot.appendChild(dragSource);
+        dragSource.dataset.bank = 'false';
+        dragSource = null;
+    }
+
+    document.addEventListener('dragstart', handleDragStart);
+    document.addEventListener('dragend', handleDragEnd);
+    document.addEventListener('dragover', handleDragOver);
+    document.addEventListener('drop', handleDrop);
+
+    // Finish message
+    if (finishBtn) {
+        finishBtn.addEventListener('click', () => {
+            alert('Nice work! You completed Session 1: Writing Equations to Represent Relationships Between Two Variables.');
+        });
+    }
+
+    // Initialize
+    showCard(1);
+})();
+</script>
+</body>
+</html>
